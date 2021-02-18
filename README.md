@@ -1,3 +1,0 @@
-# PlanetDev
-
-Learning Web Platform
