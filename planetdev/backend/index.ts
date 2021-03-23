@@ -3,14 +3,26 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import path from 'path';
+import passport from 'passport';
+
+import * as strategies from './auth/strategies';
+
+import auth from './auth';
 
 dotenv.config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 const port = process.env.port || 5000;
 
-app.use(cors());
+app.use(cors({
+    origin: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true
+}));
 app.use(express.json());
+
+app.use(passport.initialize());
+passport.use(strategies.GooglePassport);
 
 if(process.env.ATLAS_URI !== undefined) {
     mongoose.connect(process.env.ATLAS_URI, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true });
@@ -21,6 +33,12 @@ connection.once('open', () => {
 });
 connection.on('error', () => {
     console.log("Error");
+});
+
+app.use('/api/auth', auth);
+
+app.get('/', (_, res) => {
+    res.send("API is healthy");
 });
 
 app.listen(port, () => {

@@ -26,3 +26,6 @@ yarn-error.log*
 # backend
 /backend/node_modules
 /backend/dist
+
+# env (except the MongoDB one)
+/backend/auth/.env
