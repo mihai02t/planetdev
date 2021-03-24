@@ -8,12 +8,12 @@ import { DASHBOARD_PATH } from '../../../Dashboard';
 import { toast } from 'react-toastify';
 
 const GoogleButton = () => {
-    const history = useHistory();
+    // const history = useHistory();
 
     const onGoogleClick = async () => {
         try {
             await loginService();
-            window.setTimeout(() => { history.push(DASHBOARD_PATH); }, 3000);
+            // history.push(DASHBOARD_PATH);
         }
         catch(err) {
             toast(err.message);
@@ -26,7 +26,7 @@ const GoogleButton = () => {
             variant="contained" 
             fullWidth
             color="primary"
-            onClick={onGoogleClick}
+            onClick={async () => {await onGoogleClick();} }
             startIcon={<ShopIcon />}
         >
             Sign in with Google

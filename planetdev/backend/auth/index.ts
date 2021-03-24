@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
-import { IUser } from '../models';
+import { User } from '../models';
 import requiresAuthentication, { RequestWithAdmin } from './requiresAuth';
 
 const router = Router();
@@ -18,7 +18,7 @@ router.get(
         let responseHTML = '<html><head><title>Google Auth</title></head><body></body><script>res = %value%; window.opener.postMessage(res, "*"); window.close();</script></html>';
         responseHTML = responseHTML.replace('%value%', JSON.stringify({
             token: jwt.sign(
-                (req.user as IUser).googleID,
+                (req.user as User).googleID,
                 'edutainment'
             )
         }));

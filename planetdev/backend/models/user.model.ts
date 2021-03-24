@@ -1,8 +1,10 @@
 import mongoose, { Model, Document } from 'mongoose';
 
-export interface IUser extends Document {
+export interface User extends Document {
     googleID: string;
     name: string;
+    colour: string;
+    points: number;
 };
 
 const userSchema = new mongoose.Schema({
@@ -11,12 +13,21 @@ const userSchema = new mongoose.Schema({
         unique: true
     },
     name: {
-        type: String
+        type: String,
+        default: null
+    },
+    colour: {
+        type: String,
+        default: 'green'
+    },
+    points: {
+        type: Number,
+        default: 0
     }
 }, {
     timestamps: true
 });
 
-const User: Model<IUser> = mongoose.model('User', userSchema);
+const UserDB: Model<User> = mongoose.model('User', userSchema);
 
-export default User;
+export default UserDB;

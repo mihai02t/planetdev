@@ -1,7 +1,7 @@
 import path from 'path';
 import dotenv from 'dotenv';
 import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
-import User, { IUser } from '../models/user.model';
+import UserDB, { User } from '../models/user.model';
 
 dotenv.config({ path: path.join(__dirname, '.env') });
 
@@ -11,10 +11,10 @@ export const GooglePassport = new GoogleStrategy({
     callbackURL: '/api/auth/google/callback'
 },
 async (accessToken, refreshToken, profile, done) => {
-    await User.findOne({ googleID: profile.id }, async (err: any, usr: IUser | null) => {
+    await UserDB.findOne({ googleID: profile.id }, async (err: any, usr: User | null) => {
         if(err) console.log(err);
         if(!usr) {
-            const newUser: IUser = await User.create({
+            const newUser: User = await UserDB.create({
                 googleID: profile.id,
                 name: profile.name?.givenName || ""
             });

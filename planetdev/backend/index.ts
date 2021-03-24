@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import path from 'path';
 import passport from 'passport';
+import morgan from 'morgan';
 
 import * as strategies from './auth/strategies';
 
@@ -20,6 +21,8 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json());
+
+app.use(morgan('dev'));
 
 app.use(passport.initialize());
 passport.use(strategies.GooglePassport);

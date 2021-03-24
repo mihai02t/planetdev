@@ -25,16 +25,15 @@ const Dashboard = () => {
         <div className={classes.root}>
             <Grid container direction='column'  spacing={2}>
                 <Grid item>
-                <Header />
+                    <Header />
                 </Grid>
                 <Grid item container>
-                <Grid item sm={1} />
-                <Grid item xs={12} sm={10}>
-                    <DashCard />
+                    <Grid item sm={1} />
+                    <Grid item xs={12} sm={10}>
+                        <DashCard />
+                    </Grid>
+                    <Grid item sm={1} />
                 </Grid>
-                <Grid item sm={1} />
-                </Grid>
-                
             </Grid>
         </div>
     );

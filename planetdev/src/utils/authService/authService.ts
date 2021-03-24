@@ -7,7 +7,7 @@ import User from '../types/User';
 import axios, { TOKEN_KEY } from '../axios';
 import { LOGIN_PATH } from '../../routes/Auth';
 
-export async function getLoggedInAdmin(): Promise<User | null> {
+export async function getLoggedInUser(): Promise<User | null> {
     const token = localStorage.getItem(TOKEN_KEY);
 
     if (!token) return null;
@@ -36,7 +36,7 @@ export type UseUser = {
 export function useUser(): UseUser {
     const { data: user, mutate } = useSWR(
         `user-${localStorage.getItem(TOKEN_KEY)}`,
-        getLoggedInAdmin
+        getLoggedInUser
     );
 
     return {

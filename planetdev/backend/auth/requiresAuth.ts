@@ -1,14 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import User, { IUser } from '../models/user.model';
+import UserDB, { User } from '../models/user.model';
 
 export interface RequestWithAdmin extends Request {
-    loggedInUser?: IUser;
+    loggedInUser?: User;
 }
 
 const AUTH_PREFIX = 'Bearer ';
 
-export async function getUserFromHeader(req: Request): Promise<IUser | null> {
+export async function getUserFromHeader(req: Request): Promise<User | null> {
     const authHeader = req.headers.authorization;
     if(!authHeader || !authHeader.startsWith(AUTH_PREFIX)) return null;
 
@@ -20,7 +20,7 @@ export async function getUserFromHeader(req: Request): Promise<IUser | null> {
             'edutainment'
         ) as string;
 
-        const user = User.findOne({ googleID: googleID });
+        const user = UserDB.findOne({ googleID: googleID });
         return user;
     } catch {
         return null;

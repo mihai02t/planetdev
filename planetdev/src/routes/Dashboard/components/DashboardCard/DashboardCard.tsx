@@ -16,23 +16,21 @@ const DashboardCard = () => {
 
     return (
         <Card className={classes.root}>
-        <CardContent>
-        <Grid container direction='column' 
-            spacing={1} 
-            justify = "center">
-            <Grid item>
-            <Typography variant = "h5" align="center">Leading Board</Typography>
-            </Grid>
-            <Grid item xs={12}>
-                <DashboardPlayer />
-            </Grid>
-            </Grid>
-        </CardContent>
-        <CardActions>
-            <Grid container justify="center">
-                <Button variant="outlined" color="secondary">Exit</Button>
-            </Grid>
-        </CardActions>
+            <CardContent>
+                <Grid container direction='column' spacing={1} justify="center">
+                    <Grid item>
+                        <Typography variant="h5" align="center">Leading Board</Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <DashboardPlayer />
+                    </Grid>
+                </Grid>
+            </CardContent>
+            <CardActions>
+                <Grid container justify="center">
+                    <Button variant="outlined" color="secondary">Exit</Button>
+                </Grid>
+            </CardActions>
         </Card>
     );
 };
