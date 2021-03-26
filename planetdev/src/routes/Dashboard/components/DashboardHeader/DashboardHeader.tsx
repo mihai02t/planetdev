@@ -5,7 +5,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import { MenuItem, Menu, makeStyles } from '@material-ui/core';
 
 import User from '../../../../utils/types/User';
-import { getLoggedInUser } from '../../../../utils/authService';
+import { getLoggedInUser, useLogOut } from '../../../../utils/authService';
 
 const useStyles = makeStyles({
     root: {
@@ -20,6 +20,8 @@ const DashboardHeader = () => {
     const [anchorEl, setAnchorEl] = React.useState(null as any);
     const [user, setUser] = React.useState(null as User | null);
     let open = Boolean(anchorEl);
+
+    const logout = useLogOut();
 
     const handleMenu = (event: React.MouseEvent) => {
         setAnchorEl(event.currentTarget);
@@ -77,7 +79,7 @@ const DashboardHeader = () => {
                             onClick={(ev) => { handleMenu(ev)} }
                         >
                             <AccountCircle />
-                            <Typography variant="body1">{user ? user.name : null}</Typography>
+                            <Typography variant="body1" display='block'>{user ? user.name : null}</Typography>
                         </Button>
                         <Menu
                             id="menu-appbar"
@@ -96,7 +98,7 @@ const DashboardHeader = () => {
                         >
                             <MenuItem onClick={handleClose}>Profile</MenuItem>
                             <MenuItem onClick={handleClose}>My account</MenuItem>
-                            <MenuItem onClick={handleClose}>Sign Out</MenuItem>
+                            <MenuItem onClick={logout}>Sign Out</MenuItem>
                         </Menu>
                     </Box>
                 </Toolbar>
