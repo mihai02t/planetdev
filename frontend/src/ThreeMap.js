@@ -269,7 +269,7 @@ class ThreeMap extends Component {
 	    var material	= new THREE.MeshPhongMaterial({
             map	: this.loader.load(marsmap1k),
             bumpMap	: this.loader.load(marsbump1k),
-            bumpScale: 0.05,
+            bumpScale: 0.005,
 	    })
 	    var mesh	= new THREE.Mesh(geometry, material)
 	    return mesh	

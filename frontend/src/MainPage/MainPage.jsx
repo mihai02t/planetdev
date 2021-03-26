@@ -10,15 +10,17 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import MenuIcon from '@material-ui/icons/Menu';
-import Button from '@material-ui/core/Button';
+
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import Dialog from './Dialog.jsx';
+import Paper from '@material-ui/core/Paper'
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
+import InfoCard from './InfoCard.jsx';
 
 
 const useStyles = makeStyles({
@@ -26,17 +28,7 @@ const useStyles = makeStyles({
     flexGrow: 1,
   },
 
-  background: {
-    position: "absolute",
-    zIndex: -1
-  },
-
-  selectcard: {
-    position: "relative",
-    zIndex:0,
-    width: 200,
-    height: 100,
-  }
+  
 
 });
 
@@ -69,7 +61,7 @@ export default function MainPage() {
     
     
 
-    <AppBar style ={{margin:0}}  display="flex">
+    <AppBar style ={{margin:0}}  display="flex" >
       <Box display="flex">
 
         <Box>  
@@ -145,30 +137,14 @@ export default function MainPage() {
 
       </AppBar>
 
+    <Paper  class="selectcard" style={{width:'30%', height:'60%', marginLeft:'60%', marginTop:'500px', zIndex: '1', position:'fixed'}}>
+      <InfoCard/>
+    </Paper>
 
-      <Card className={classes.root} class="selectcard">
-    <CardContent>
-      <Typography className={classes.title} color="textSecondary" gutterBottom>
-        Word of the Day
-      </Typography>
-      <Typography variant="h5" component="h2">
-        testtest
-      </Typography>
-      <Typography className={classes.pos} color="textSecondary">
-        adjective
-      </Typography>
-      <Typography variant="body2" component="p">
-        well meaning and kindly.
-        <br />
-        {'"a benevolent smile"'}
-      </Typography>
-    </CardContent>
-    <CardActions>
-      <Button size="small">Learn More</Button>
-    </CardActions>
-    </Card>
 
-    <ThreeMap style ={{margin:0}} display="flex" class = "background"/>
+    <Paper class="background" style={{width:'233px', marginRight:'10px', zIndex: '-1', position: 'fixed'}}>
+    <ThreeMap style ={{margin:0}} display="flex"/>
+    </Paper>
 
 
     

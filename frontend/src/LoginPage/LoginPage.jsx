@@ -51,12 +51,13 @@ function LoginPage() {
       className={classes.root}
       
       >
-      <ThreeMap_login/>
+      
+      <ThreeMap_login style={{zIndex: '-1', position: 'fixed'}}/>
       <CssBaseline />
 
           
           
-          <Typography>
+        <Typography style={{ marginRight:'100px', zIndex: '0', position: 'fixed'}}>
             <Box 
               textAlign="center" 
               fontWeight="fontWeightLight" 
@@ -86,7 +87,7 @@ function LoginPage() {
             </Box>
           </Typography>
           
-        <LoginForm/>
+        <LoginForm />
         
         
       </Grid>

@@ -2,6 +2,11 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import * as THREE from "three";
+import marsbump1k from './MainPage/ThreeAssets/marsbump1k.jpg'
+import marsmap1k from './MainPage/ThreeAssets/marsmap1k.jpg'
+import moonbump1k from './MainPage/ThreeAssets/moonbump1k.jpg'
+import neptunemap from './MainPage/ThreeAssets/neptunemap.jpg'
+
 class ThreeMap extends Component {
 
     componentDidMount() {
@@ -21,17 +26,7 @@ class ThreeMap extends Component {
     let vel = geom.getAttribute("velocity");
     let va = vel.array;
 
-    //attempt to mock up stars
-    //let STAR_COUNT = 800;   //control the density of the stars
-    //let geom_stars = new THREE.BufferGeometry();
-    //geom_stars.setAttribute("position", new THREE.BufferAttribute(new Float32Array(3*STAR_COUNT), 3));
-    //geom_stars.setAttribute("velocity", new THREE.BufferAttribute(new Float32Array(1*STAR_COUNT), 1));
-    //geom_stars.setAttribute("color", new THREE.Float32BufferAttribute(new Float32Array(4*STAR_COUNT), 4))
-    //geom_stars.setAttribute("size", new THREE.Float32BufferAttribute(new Float32Array(1*STAR_COUNT), 1))
-    //let pos_stars = geom_stars.getAttribute("position");
-    //let p_sa = pos_stars.array;
-    //let vel_stars = geom_stars.getAttribute("velocity");
-    //let v_sa = vel_stars.array;
+    this.loader = new THREE.TextureLoader();  
     
     //attempt to mock up planets
     //we only mock up several planets
@@ -44,9 +39,19 @@ class ThreeMap extends Component {
     planet_geos[2] =  new THREE.SphereGeometry( 12, 32, 32 );    //large-size planet
     let planet_mats = new Array;
     
-    planet_mats[0] = new THREE.MeshBasicMaterial( {color: 0x660099} );
-    planet_mats[1] = new THREE.MeshBasicMaterial( {color: 0x660033} );
-    planet_mats[2] = new THREE.MeshBasicMaterial( {color: 0x663399} );
+    planet_mats[0] = new THREE.MeshPhongMaterial({
+        map	: this.loader.load(marsmap1k),
+        bumpMap	: this.loader.load(marsbump1k),
+    })
+    planet_mats[1] = new THREE.MeshPhongMaterial({
+        color: 0x8e8a7d,
+        bumpMap	: this.loader.load(moonbump1k),
+    })
+
+
+    planet_mats[2] = new THREE.MeshPhongMaterial({
+        map	: this.loader.load(neptunemap),
+    })
 
     function init() {
         //initialize scene, camera and renderer
@@ -79,17 +84,6 @@ class ThreeMap extends Component {
             va[2*line_index] = va[2*line_index+1]= 0;
         }
 
-        //construct the coordinates of stars
-        //for (let star_index = 0; star_index < STAR_COUNT; star_index++) {
-        //    var x = Math.random() * 400 - 200;
-        //    var y = Math.random() * 200 - 100;
-        //    var z = Math.random() * 500 - 250 - 950;
-        //    p_sa[3*star_index] = x;
-        //    p_sa[3*star_index+1] = y;
-        //    p_sa[3*star_index+2] = z;
-        //    va[star_index] = 0;
-        //}
-
         //define a handy helper for returning random int
         function getRandom(min, max) {
             min = Math.ceil(min);
@@ -101,7 +95,7 @@ class ThreeMap extends Component {
         for (let planet_index = 0; planet_index < PLANETS_COUNT; planet_index++){
             
             
-            planets[planet_index] = new THREE.Mesh( planet_geos[getRandom(0, 3)], planet_mats[getRandom(0, 3)] );
+            planets[planet_index] = new THREE.Mesh( planet_geos[getRandom(0, 3)], planet_mats[Math.round(getRandom(0, 2))] );
             planets[planet_index].position.x = Math.random() * 300 - 150 ;
             planets[planet_index].position.y = Math.random() * 200 - 100 ;
             planets[planet_index].position.z = Math.random() * 200 - 50 ;
@@ -112,11 +106,35 @@ class ThreeMap extends Component {
         //debugger;
         let mat = new THREE.LineBasicMaterial({color: 0xffffff});
         let lines = new THREE.LineSegments(geom, mat);
-        //let stars = new THREE.Points(geom_stars, mat);
 
         scene.add(lines);
-        //scene.add(stars);
         
+
+        //handle lights
+        var light_1	= new THREE.AmbientLight( 0x222222 )
+	    scene.add( light_1 )
+
+        var light	= new THREE.DirectionalLight( 0xffffff, 1.2 )
+        light.position.set(50,50,50)
+        
+        light.castShadow	= true
+        light.shadow.camera.near	= 0.01
+        light.shadow.camera.far	= 15
+        light.shadow.camera.fov	= 45
+
+        light.shadow.camera.left	= -1
+        light.shadow.camera.right	=  1
+        light.shadow.camera.top	=  1
+        light.shadow.camera.bottom= -1
+
+        light.shadow.bias	= 0.001
+        light.shadowDarkness	= 0.2
+
+        light.shadow.mapsizeWidth	= 1024
+        light.shadow.mapSizeHeight	= 1024
+        scene.add( light )
+    
+
 
         //listen screen resize event
         window.addEventListener("resize", onWindowResize, false);
@@ -154,18 +172,7 @@ class ThreeMap extends Component {
                 va[2*line_index+1] = 0;
             }
         }
-        
-        //take care of stars movement
-        //for (let star_index = 0; star_index < STAR_COUNT; star_index++){
-        //    v_sa[star_index] += 0.03;
-        //    p_sa[3*star_index + 2] += v_sa[star_index];
-        //    
-        //    if(p_sa[3*star_index+2] > 200) {
-        //        var z= Math.random() * 200 - 100;
-        //        p_sa[3*star_index+2] = z;
-        //        v_sa[star_index] = 0;
-        //    }
-        //}
+
         
         //take care of planets movement
         for (let planet_index = 0; planet_index < PLANETS_COUNT; planet_index++){
@@ -196,8 +203,6 @@ class ThreeMap extends Component {
     
     // animation begin
     init();
-
-    
         // === THREE.JS EXAMPLE CODE END ===
     }
 
