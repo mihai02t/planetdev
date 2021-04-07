@@ -57,37 +57,73 @@ function LoginPage() {
 
           
           
-        <Typography style={{ marginRight:'100px', zIndex: '0', position: 'fixed'}}>
+        <Typography style={{  marginRight:'100px', zIndex: '0', position: 'fixed'}}>
             <Box 
               textAlign="center" 
               fontWeight="fontWeightLight" 
               fontSize="8.4rem" 
-              p={2}
+              p={1}
               position = "absolute"
-
-              left="30%"
+              left="300px"
               top="40%"
               zIndex="modal"
               color="white"
+              width = "1200px"
               >
-                Planet<b>Dev</b> 
+              
+
+
+              <Box
+                textAlign="center" 
+                //fontWeight="fontWeightLight" 
+                //fontSize="8.4rem" 
+                p={2}
+                position = "absolute"
+        
+                left="650px"
+                top="70px"
+                zIndex="modal"
+                color="white"
+                
+                >
+                <LoginForm />
+              </Box>  
+              
+
               <Box  
                 fontWeight="fontWeightLight" 
-                fontSize="2.4rem"
-                //fontStyle="italic"
-                p={3}
+                fontSize="8.4rem"
+
+                p={0}
                 position="absolute"
                 top={0}
                 left="0%"
-                top="65%"
+                top="25%"
                 
                 zIndex="modal">
-                  Coding, in an edutainment way. 
+                  Planet<b>Dev</b> 
+
+                  <Box  
+                  fontWeight="fontWeightLight" 
+                  fontSize="2.4rem"
+                  p={1}
+                  position="absolute"
+                  top={0}
+                  left="0%"
+                  top="70%"
+                  
+                  zIndex="modal">
+                    Coding, in an edutainment way. 
+                </Box>
+
               </Box>
+
+              
+
             </Box>
-          </Typography>
+            </Typography>
           
-        <LoginForm />
+        
         
         
       </Grid>

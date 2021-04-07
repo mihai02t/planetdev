@@ -17,6 +17,7 @@ function App() {
       
       <Route path ="/" exact component={LoginPage}/>
       <Route path ="/main" exact component={MainPage}/>
+      <Route path ="/main/game" exact component={MainPage}/>
       
     </Switch>
 

@@ -72,25 +72,13 @@ function LoginForm() {
         
       
       <Typography>
-      <Box 
-        textAlign="center" 
-        //fontWeight="fontWeightLight" 
-        //fontSize="8.4rem" 
-        p={2}
-        position = "absolute"
-
-        left="60%"
-        top="45%"
-        zIndex="modal"
-        color="white"
-        >
+      
           <FacebookBtn />
 
           <p/>
 
           <GoogleBtn/>
         
-      </Box>
 
 
       </Typography>

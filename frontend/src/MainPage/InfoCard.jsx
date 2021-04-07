@@ -1,4 +1,5 @@
 import React from 'react';
+import Paper from '@material-ui/core/Paper'
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -16,6 +17,8 @@ export default function InfoCard() {
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = getSteps();
     return (
+      
+      <Paper class="selectcard" style={{ width: '30%', marginLeft: '60%', marginTop: '20%', zIndex: '1', position: 'fixed' }}>
         <Card >
         <CardContent>
           <Typography  color="textSecondary" gutterBottom>
@@ -57,6 +60,7 @@ export default function InfoCard() {
           <Button size="small">Continue journey</Button>
         </CardActions>
         </Card>
+      </Paper>
     );
   }
 
