@@ -5,6 +5,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import Auth, { LOGIN_PATH } from './routes/Auth';
 import Dashboard, { DASHBOARD_PATH } from './routes/Dashboard';
 import Main, { MAIN_PATH } from './routes/Main';
+import Coding, { CODING_PATH } from './routes/Coding';
 
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -26,6 +27,9 @@ function App() {
             </Route>
             <Route path={MAIN_PATH}>
               <Main/>
+            </Route>
+            <Route path={CODING_PATH}>
+              <Coding/>
             </Route>
             <Route path="/">
               <Redirect to={MAIN_PATH}/>

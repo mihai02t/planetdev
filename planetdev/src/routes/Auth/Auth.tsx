@@ -12,6 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import LoginForm from './components/LoginForm';
 
 import { DASHBOARD_PATH } from '../Dashboard';
+import { MAIN_PATH } from '../Main';
 import ThreeLogin from '../../Three/ThreeLogin';
 
 export const LOGIN_PATH = '/login';
@@ -37,7 +38,7 @@ const Auth = () => {
     const { loading, loggedIn } = useUser();
 
     useEffect(() => {
-        if (loggedIn) history.replace(DASHBOARD_PATH);
+        if (loggedIn) history.replace(MAIN_PATH);
     }, [loggedIn]);
 
     const classes = useStyles();
