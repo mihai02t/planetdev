@@ -5,7 +5,8 @@ import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
-import ThreeMap from '../../Three/ThreeGame';
+import ThreeGame from '../../Three/ThreeGame';
+import ThreeVoyage from '../../Three/ThreeVoyage';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -21,6 +22,8 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import InfoCard from './components/InfoCard';
+
+import Background from './components/Background';
 
 import { useRequiresAuthentication } from "../../utils/authService";
 
@@ -59,9 +62,7 @@ const Main = () => {
         <div className="CenteredTabs">
         <CssBaseline/>
         
-        
-    
-        <AppBar style ={{margin:0, display:"flex"}}>
+        <AppBar style={{margin:0, display:"flex"}}>
           <Box display="flex">
     
             <Box>  
@@ -72,25 +73,25 @@ const Main = () => {
     
             <Box flexGrow={1} />
             <Toolbar>
-            <Grid item>
-              <Grid container justify={"center"}>
-              
-                <Tabs
-                  value={value}
-                  indicatorColor="primary"
-                  onChange={handleChange}
-                 
-                >
-                  <Tab label="Current Planet"/>
-                  <Tab label="Dash Board"  />
-                  <Tab label="Other Challenges" disabled/>
+              <Grid item>
+                <Grid container justify={"center"}>
+                
+                  <Tabs
+                    value={value}
+                    indicatorColor="primary"
+                    onChange={handleChange}
                   
-                  <Dialog />
-                  
-                </Tabs>
-              
+                  >
+                    <Tab label="Current Planet"/>
+                    <Tab label="Dash Board"  />
+                    <Tab label="Other Challenges" disabled/>
+                    
+                    <Dialog />
+                    
+                  </Tabs>
+                
+                </Grid>
               </Grid>
-            </Grid>
             </Toolbar>
                       
                       
@@ -135,14 +136,14 @@ const Main = () => {
     
           </AppBar>
     
-        <Paper className="selectcard" style={{width:'30%', height:'60%', marginLeft:'60%', marginTop:'500px', zIndex: 1, position:'fixed'}}>
+        {/* <Paper className="selectcard" style={{width:'30%', height:'60%', marginLeft:'60%', marginTop:'500px', zIndex: 1, position:'fixed'}}>
           <InfoCard/>
-        </Paper>
+        </Paper> */}
     
-    
-        <Paper className="background" style={{width:'233px', marginRight:'10px', zIndex: -1, position: 'fixed'}}>
-        <ThreeMap/>
-        </Paper>
+        <Background/>
+        {/* <Paper className="background" style={{width:'233px', marginRight:'10px', zIndex: -1, position: 'fixed'}}>
+        <ThreeGame/>
+        </Paper> */}
     
         </div>
         

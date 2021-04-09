@@ -5,7 +5,7 @@ import marsmap1k from '../assets/marsmap1k.jpg'
 import moonbump1k from '../assets/moonbump1k.jpg'
 import neptunemap from '../assets/neptunemap.jpg'
 
-class ThreeMap extends Component {
+class ThreeLogin extends Component {
     [x: string]: any;
 
     componentDidMount() {
@@ -213,4 +213,4 @@ class ThreeMap extends Component {
 }
 
 
-export default ThreeMap;
+export default ThreeLogin;

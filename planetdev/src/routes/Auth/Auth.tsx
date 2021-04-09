@@ -19,18 +19,28 @@ export const LOGIN_PATH = '/login';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-      height: '100vh',
+        height: '100vh',
     },
-    image_block: {
-        //backgroundImage: 'url(https://source.unsplash.com/random)',
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        color: 'white',
+    paper: {
+        padding:theme.spacing(2),
+        //margin: theme.spacing(8, 4),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+    form: {
+        width: '100%', // Fix IE 11 issue.
+        marginTop: theme.spacing(1),
+    },
+    submit: {
+        margin: theme.spacing(3, 0, 2),
+        background: "primary",
+    },
+    login: {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-      }
+    }
 }));
 
 const Auth = () => {
@@ -49,36 +59,58 @@ const Auth = () => {
         <Grid container component="main" className={classes.root}>
             <ThreeLogin />
             <CssBaseline /> 
-            <Typography style={{ marginRight:'100px', zIndex: -1, position: 'fixed'}}>
+            <Typography style={{  marginRight:'100px', zIndex: 0, position: 'fixed'}}>
                 <Box 
-                  textAlign="center" 
-                  fontWeight="fontWeightLight" 
-                  fontSize="8.4rem" 
-                  p={2}
-                  position="absolute"
-    
-                  left="45%"
-                  top="40%"
-                  zIndex="modal"
-                  color="white"
+                    textAlign="center" 
+                    fontWeight="fontWeightLight" 
+                    fontSize="8.4rem" 
+                    p={1}
+                    position = "absolute"
+                    left="300px"
+                    top="40%"
+                    zIndex="modal"
+                    color="white"
+                    width = "1200px"
                 >
-                    Planet<b>Dev</b> 
+                    <Box
+                        textAlign="center" 
+                        //fontWeight="fontWeightLight" 
+                        //fontSize="8.4rem" 
+                        p={2}
+                        position = "absolute"
+                        left="650px"
+                        top="70px"
+                        zIndex="modal"
+                        color="white"
+                    >
+                        <LoginForm />
+                    </Box>
                     <Box  
                         fontWeight="fontWeightLight" 
-                        fontSize="2.4rem"
-                        //fontStyle="italic"
-                        p={3}
+                        fontSize="8.4rem"
+                        p={0}
                         position="absolute"
                         // top={0}
-                        left="5%"
-                        top="65%"
+                        left="0%"
+                        top="25%"
                         zIndex="modal"
                     >
-                      Coding, in an edutainment way. 
+                        Planet<b>Dev</b>
+                        <Box  
+                            fontWeight="fontWeightLight" 
+                            fontSize="2.4rem"
+                            p={1}
+                            position="absolute"
+                            // top={0}
+                            left="0%"
+                            top="70%"
+                            zIndex="modal"
+                        >
+                            Coding, in an edutainment way. 
+                        </Box>
                     </Box>
                 </Box>
             </Typography>
-            <LoginForm />
         </Grid>
     );
 };

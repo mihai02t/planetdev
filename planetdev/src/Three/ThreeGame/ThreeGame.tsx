@@ -29,7 +29,7 @@ const style = {
 
 };
 
-class ThreeMap extends Component {
+class ThreeGame extends Component {
     [x: string]: any;
     componentDidMount() {
         this.sceneSetup();
@@ -41,7 +41,7 @@ class ThreeMap extends Component {
     componentWillUnmount() {
         window.removeEventListener('resize', this.handleWindowResize);
         window.cancelAnimationFrame(this.requestID);
-        this.controls.dispose();
+        // this.controls.dispose();
     }
 
     // Standard scene setup in Three.js
@@ -49,7 +49,7 @@ class ThreeMap extends Component {
         // get container dimensions and use them for scene sizing
         const width = this.mount.clientWidth;
         const height = this.mount.clientHeight;
-        
+        this.clock = new THREE.Clock();
         this.scene = new THREE.Scene();
 
         //initialize camera
@@ -60,10 +60,10 @@ class ThreeMap extends Component {
             1000, // far plane
             
         );
-        this.camera.position.z = 2.0; // is used here to set some distance from a cube that is located at z = 0
-
+        this.camera.position.x = 0.2;
+        this.camera.position.z = 5.2;
         //initialize ctrls and renders
-        this.controls = new OrbitControls( this.camera, this.mount );
+        // this.controls = new OrbitControls( this.camera, this.mount );
         this.renderer	= new THREE.WebGLRenderer({
             antialias	: true
         });
@@ -329,6 +329,42 @@ class ThreeMap extends Component {
         this.scene.add( light )
     }
 
+    planetUpdate = () => {
+        //handle earth & earth mesh movement
+        this.earthMesh.rotation.y += 1/16 * 0.01;
+        this.cloudMesh.rotation.y  += 1/16 * 0.02
+        
+        //handle the movement of other planets
+        this.moonMesh.rotation.y += 1/16 * 0.02;
+        this.marsMesh.rotation.y += 1/16 * 0.03;
+        this.jupiterMesh.rotation.y += 1/16 * 0.01;
+    }
+
+    //handle camera update
+    cameraUpdate = (x: any, y: any, z: any, curve_tube: any, isReverse: any) => {
+        const time = this.clock.getElapsedTime();
+        const looptime = 3;
+        var t;
+
+        if (isReverse){
+            t = 1 - (time % looptime) / looptime;
+        }
+        else {
+            t = (time % looptime) / looptime;
+        }
+
+        if (time > looptime){
+            return;
+        }
+        var pos = curve_tube.geometry.parameters.path.getPointAt(t);
+        this.camera.position.copy(pos);   
+        //const t2 = ((time + 0.1) % looptime) / looptime;
+        //const pos = curve_tube.geometry.parameters.path.getPointAt(t);
+        //const pos2 = curve_tube.geometry.parameters.path.getPointAt(t2);
+
+        this.camera.lookAt(x, y, z);
+    }
+
     //main scene constructor
     addCustomSceneObjects = () => {
         this.loader = new THREE.TextureLoader();  
@@ -353,40 +389,59 @@ class ThreeMap extends Component {
         this.scene.add(this.jupiterMesh)
 
         //create camera orbit
-        this.curve = new THREE.CatmullRomCurve3( [
-            //start point
-            new THREE.Vector3(-10, 0, 10),
-            
-            //middle breakpoints
-            new THREE.Vector3(-5,10,-10),
-            new THREE.Vector3(2, 5, -5),
-            
-            //endpoint
-            new THREE.Vector3(10, 0, 10),
+        this.curve = Array;
+        
+        // from jupiter to mars
+        this.curve[0] = new THREE.CatmullRomCurve3( [
+            new THREE.Vector3(0.2,0,5.2),   // jupiter view
+            new THREE.Vector3(1.5, 0, 3.8), // middle point
+            new THREE.Vector3(0.9,0,2.8),   // endpoint
           ],
-            true,
+          false,
         );
 
-        let curve_geom = new THREE.BufferGeometry();
-		// 初始化曲线的顶点(放样点，数值越大弯曲更光滑)
-        // curve_geom.__arcLengthDivisions = 1000;
-		// curve_geom.vertices = this.curve.getSpacedPoints(100);
-		let curve_mat = new THREE.LineBasicMaterial({ color:new THREE.Color().setHSL(Math.random(),0.5,0.5) });
-		let curveObject = new THREE.Line(curve_geom, curve_mat);
-		this.scene.add(curveObject);
+        //from mars to jupiter
+        this.curve[1] = new THREE.CatmullRomCurve3( [
+            new THREE.Vector3(0.9,0,2.8),   // mars view
+            new THREE.Vector3(0.8, 0.3, 1.5), // middle point
+            new THREE.Vector3(0.5, 0.5, 0.8)
+
+          ],
+          false,
+        );
+
+        let curve_geom_0 = new THREE.TubeBufferGeometry(this.curve[0], 100, 0, 10, false);
+        let curve_mat_0 = new THREE.MeshBasicMaterial({color:0x00ff00, wireframe:true, side: THREE.DoubleSide});
+        this.curve_tube_0 = new THREE.Mesh(curve_geom_0, curve_mat_0);
+        //this.scene.add(this.curve_tube_0)
+
+
+        let curve_geom = new THREE.TubeBufferGeometry(this.curve[1], 100, 0, 10, false);
+        let curve_mat = new THREE.MeshBasicMaterial({color:0xff0000, wireframe:true, side: THREE.DoubleSide});
+        this.curve_tube_1 = new THREE.Mesh(curve_geom, curve_mat);
+        //this.scene.add(curve_tube)
 				
     };
 
+    handleCameraPos = (flag: any, isReverse: any) => {
+        if (flag == 0){
+            return;
+        }
+        else if (flag == 1){
+            this.cameraUpdate(0, 0, 2.0, this.curve_tube_0, isReverse);
+        }
+        else if (flag == 2){
+            this.cameraUpdate(0.5, 0.5, 0.5, this.curve_tube_1, isReverse);
+        }
+    };
+
     startAnimationLoop = () => {
-        //handle earth & earth mesh movement
-        this.earthMesh.rotation.y += 1/16 * 0.01;
-        this.cloudMesh.rotation.y  += 1/16 * 0.02
-        
-        //handle the movement of other planets
-        this.moonMesh.rotation.y += 1/16 * 0.02;
-        this.marsMesh.rotation.y += 1/16 * 0.03;
-        this.jupiterMesh.rotation.y += 1/16 * 0.01;
+        this.planetUpdate();
        
+        //handle the movement of the camera
+        //this.handleCameraPos(0, false);    //0: stop at jupiter 1: move from jupiter to mars 2: move from mars to moon; isReverse: true == reverse the orbit false == follow the order
+        this.handleCameraPos(1, true);
+
         //render the entire scene
         this.renderer.render( this.scene, this.camera );
         // The window.requestAnimationFrame() method tells the browser that you wish to perform
@@ -410,21 +465,21 @@ class ThreeMap extends Component {
 }
 
 //these are also react parts...
-class Container extends React.Component {
-    state = {isMounted: true};
+// class Container extends React.Component {
+//     state = {isMounted: true};
 
-    render() {
-        const {isMounted = true} = this.state;
-        return (
-            <>
-                <button onClick={() => this.setState(state => ({isMounted: this.state.isMounted}))}>
-                    {isMounted ? "Unmount" : "Mount"}
-                </button>
-                {isMounted && <ThreeMap />}
-                {isMounted && <div>Scroll to zoom, drag to rotate</div>}
-            </>
-        )
-    }
-}
+//     render() {
+//         const {isMounted = true} = this.state;
+//         return (
+//             <>
+//                 <button onClick={() => this.setState(state => ({isMounted: this.state.isMounted}))}>
+//                     {isMounted ? "Unmount" : "Mount"}
+//                 </button>
+//                 {isMounted && <ThreeGame />}
+//                 {isMounted && <div>Scroll to zoom, drag to rotate</div>}
+//             </>
+//         )
+//     }
+// }
 
-export default ThreeMap;
+export default ThreeGame;
