@@ -1,11 +1,24 @@
 import mongoose, { Model, Document } from 'mongoose';
 
+export interface ChallengeInUser {
+    challengeId: mongoose.Types.ObjectId;
+    code: string;
+    completed: boolean;
+}
+
 export interface User extends Document {
     googleID: string;
     name: string;
-    colour: string;
     points: number;
-};
+    planetsUnlocked: number;
+    challenges: ChallengeInUser[];
+}
+
+const challengeinUserSchema = new mongoose.Schema({
+    challengeId: mongoose.SchemaTypes.ObjectId,
+    code: String,
+    completed: Boolean
+});
 
 const userSchema = new mongoose.Schema({
     googleID: {
@@ -16,13 +29,16 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: null
     },
-    colour: {
-        type: String,
-        default: 'green'
-    },
     points: {
         type: Number,
         default: 0
+    },
+    planetsUnlocked: {
+        type: Number,
+        default: 1
+    },
+    challenges: {
+        type: [challengeinUserSchema]
     }
 }, {
     timestamps: true

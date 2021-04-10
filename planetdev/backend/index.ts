@@ -7,6 +7,7 @@ import passport from 'passport';
 import morgan from 'morgan';
 
 import * as strategies from './auth/strategies';
+import { populateChallenges } from './models/challenges.model';
 
 import auth from './auth';
 
@@ -33,6 +34,12 @@ if(process.env.ATLAS_URI !== undefined) {
 const connection = mongoose.connection;
 connection.once('open', () => {
     console.log("MongoDB connection opened successfully");
+    connection.db.listCollections({name: 'challenges'})
+        .next(async function(err, collinfo) {
+            if(!collinfo) {
+                await populateChallenges();
+            }
+        });
 });
 connection.on('error', () => {
     console.log("Error");
