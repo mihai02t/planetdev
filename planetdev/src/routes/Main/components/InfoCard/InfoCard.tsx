@@ -9,12 +9,16 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 
+export type InfoCardProps = {
+  currentPlanet: number;
+};
+
 function getSteps() {
     return ['Stage 1', 'Stage 2', 'Stage 3', 'Stage 4'];
-  }
+}
 
-export default function InfoCard() {
-    const [activeStep, setActiveStep] = React.useState(0);
+const InfoCard = (props: InfoCardProps) => {
+    const [activeStep, setActiveStep] = React.useState(props.currentPlanet);
     const steps = getSteps();
     return (
       <Paper className="selectcard" style={{ width: '30%', marginLeft: '60%', marginTop: '20%', zIndex: 1, position: 'fixed' }}>
@@ -63,4 +67,4 @@ export default function InfoCard() {
     );
   }
 
-
+export default InfoCard;

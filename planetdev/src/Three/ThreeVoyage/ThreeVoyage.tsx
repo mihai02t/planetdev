@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 // import ReactDOM from "react-dom";
 import * as THREE from 'three';
+import { Challenge } from "../../../backend/models";
 // import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import moon_1024 from "../assets/moonmap1k.jpg";
 
@@ -11,9 +12,14 @@ const style = {
 
 };
 
-class ThreeVoyage extends Component {
+type VoyageProps = {
+    challenges: Challenge[]
+};
+
+class ThreeVoyage extends Component<VoyageProps> {
     [x: string]: any;
     componentDidMount() {
+        console.log(this.props.challenges);
         let keys: any = {
             a: false,
             s: false,

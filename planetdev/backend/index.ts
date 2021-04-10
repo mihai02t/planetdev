@@ -10,6 +10,7 @@ import * as strategies from './auth/strategies';
 import { populateChallenges } from './models/challenges.model';
 
 import auth from './auth';
+import challenges from './challenges';
 
 dotenv.config({ path: path.join(__dirname, '.env') });
 
@@ -46,6 +47,7 @@ connection.on('error', () => {
 });
 
 app.use('/api/auth', auth);
+app.use('/api/challenges', challenges);
 
 app.get('/', (_, res) => {
     res.send("API is healthy");
