@@ -39,7 +39,12 @@ const Voyage = () => {
 
     return (
         <div>
-            {challenges.length && <ThreeVoyage challenges={challenges} history={history}/>}
+            {challenges.length && 
+            <ThreeVoyage
+                challenges={challenges}
+                challengesOfUser={user.challenges} 
+                history={history}
+            />}
         </div>
     );
 };

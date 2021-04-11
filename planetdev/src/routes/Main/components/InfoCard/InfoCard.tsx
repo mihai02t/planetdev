@@ -14,14 +14,14 @@ export type InfoCardProps = {
 };
 
 function getSteps() {
-    return ['Stage 1', 'Stage 2', 'Stage 3', 'Stage 4'];
+    return ['Task 1', 'Task 2', 'Task 3', 'Task 4', 'Task 5'];
 }
 
 const InfoCard = (props: InfoCardProps) => {
     const [activeStep, setActiveStep] = React.useState(props.currentPlanet);
     const steps = getSteps();
     return (
-      <Paper className="selectcard" style={{ width: '30%', marginLeft: '60%', marginTop: '20%', zIndex: 1, position: 'fixed' }}>
+      <Paper className="selectcard" style={{ width: '33%', marginLeft: '60%', marginTop: '20%', zIndex: 1, position: 'fixed' }}>
         <Card >
         <CardContent>
           <Typography  color="textSecondary" gutterBottom>

@@ -6,6 +6,7 @@ import Challenge from "../../utils/types/Challenge";
 // import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import moon_1024 from "../assets/moonmap1k.jpg";
 import { CODING_PATH } from "../../routes/Coding";
+import ChallengeInUser from "../../utils/types/ChallengeInUser";
 
 const style = {
     display:'block',
@@ -16,10 +17,11 @@ const style = {
 
 type VoyageProps = {
     challenges: Challenge[],
+    challengesOfUser: ChallengeInUser[],
     history: History<unknown>
 };
 
-interface Challenge3D extends THREE.Mesh<THREE.ConeGeometry, THREE.MeshNormalMaterial> {
+interface Challenge3D extends THREE.Mesh<THREE.ConeGeometry, THREE.MeshBasicMaterial> {
     challengeId?: any;
 }
 
@@ -75,7 +77,10 @@ class ThreeVoyage extends Component<VoyageProps> {
 
     addChallenge = (challengeId: any, pos1: any, pos2: any, pos3: any) => {
         const geometry = new THREE.ConeGeometry(0.3, 1, 10);
-        const material = new THREE.MeshNormalMaterial();
+        const material = new THREE.MeshBasicMaterial({ color: 0x07FEFF, transparent: true, opacity: 0.9 });
+        if(this.props.challengesOfUser.find(ch => ch.challengeId === challengeId)?.completed) {
+            material.color.setHex(0x8C04FF);
+        }
         const newChallenge: Challenge3D = new THREE.Mesh(geometry, material);
         // newChallenge.castShadow = true;
         // newChallenge.receiveShadow = true;
@@ -165,7 +170,7 @@ class ThreeVoyage extends Component<VoyageProps> {
             if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
               console.log('collisionResults', collisionResults);
               // change bla
-              this.props.history.replace(CODING_PATH + `/${collisionResults[0].object.challengeId}`);
+              this.props.history.push(CODING_PATH + `/${collisionResults[0].object.challengeId}`);
               window.location.reload();
               return;
             }
