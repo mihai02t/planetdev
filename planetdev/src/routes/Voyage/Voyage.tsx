@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 import ThreeVoyage from "../../Three/ThreeVoyage";
 import { useRequiresAuthentication } from "../../utils/authService";
-import { Challenge } from "../../../backend/models";
+import Challenge from "../../utils/types/Challenge";
 
 import { MAIN_PATH } from "../Main";
 import { fetchChallenges } from "./services";
@@ -39,7 +39,7 @@ const Voyage = () => {
 
     return (
         <div>
-            {challenges.length && <ThreeVoyage challenges={challenges}/>}
+            {challenges.length && <ThreeVoyage challenges={challenges} history={history}/>}
         </div>
     );
 };

@@ -1,9 +1,11 @@
 import React, { Component } from "react";
+import { History } from "history";
 // import ReactDOM from "react-dom";
 import * as THREE from 'three';
-import { Challenge } from "../../../backend/models";
+import Challenge from "../../utils/types/Challenge";
 // import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import moon_1024 from "../assets/moonmap1k.jpg";
+import { CODING_PATH } from "../../routes/Coding";
 
 const style = {
     display:'block',
@@ -13,11 +15,17 @@ const style = {
 };
 
 type VoyageProps = {
-    challenges: Challenge[]
+    challenges: Challenge[],
+    history: History<unknown>
 };
+
+interface Challenge3D extends THREE.Mesh<THREE.ConeGeometry, THREE.MeshNormalMaterial> {
+    challengeId?: any;
+}
 
 class ThreeVoyage extends Component<VoyageProps> {
     [x: string]: any;
+
     componentDidMount() {
         console.log(this.props.challenges);
         let keys: any = {
@@ -65,6 +73,21 @@ class ThreeVoyage extends Component<VoyageProps> {
         }); 
     }
 
+    addChallenge = (challengeId: any, pos1: any, pos2: any, pos3: any) => {
+        const geometry = new THREE.ConeGeometry(0.3, 1, 10);
+        const material = new THREE.MeshNormalMaterial();
+        const newChallenge: Challenge3D = new THREE.Mesh(geometry, material);
+        // newChallenge.castShadow = true;
+        // newChallenge.receiveShadow = true;
+        newChallenge.position.set(pos1, pos2, pos3);
+        newChallenge.challengeId = challengeId;
+        return newChallenge;
+    }
+
+    getRandom = (min: number, max: number) => {
+        return Math.random() * (max - min) + min;
+    }
+
     // Standard scene setup in Three.js
     sceneSetup = () => {
         this.clock = new THREE.Clock();
@@ -97,11 +120,18 @@ class ThreeVoyage extends Component<VoyageProps> {
             7, // far plane
             
         );
+
+        this.challenges = [];
+        this.props.challenges.forEach((challenge) => {
+            const apt = 5 * Math.sqrt(2) / 2;
+            const challengeToAdd = this.addChallenge(challenge._id.toString(), this.getRandom(-apt, apt), 0.5, this.getRandom(-apt, apt));
+            this.scene.add(challengeToAdd);
+            this.challenges.push(challengeToAdd);
+        });
         
-        this.camera.position.set(0, 0.5, 0);
+        this.camera.position.set(0, 0.3, 0);
         this.camera.lookAt(this.scene.position);
 
-        
         //initialize ctrls and renders
         //this.controls = new OrbitControls( this.camera, this.mount );
         this.renderer	= new THREE.WebGLRenderer({
@@ -117,7 +147,30 @@ class ThreeVoyage extends Component<VoyageProps> {
         
 
     };
+    
+    checkCollision = () => {
+        const player = this.scene.getObjectByName('player');
+        const originPoint = player.position.clone();
 
+        // console.log(player.geometry);
+        const vector = new THREE.Vector3();
+        for (let vertexIndex = 0; vertexIndex < player.geometry.attributes.position.count; vertexIndex++) {
+            let localVertex = vector.fromBufferAttribute(player.geometry.attributes.position, vertexIndex);
+            var globalVertex = localVertex.applyMatrix4(player.matrix);
+            var directionVector = globalVertex.sub(player.position);
+        
+            var ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
+            var collisionResults = ray.intersectObjects(this.challenges) as any;
+        
+            if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
+              console.log('collisionResults', collisionResults);
+              // change bla
+              this.props.history.replace(CODING_PATH + `/${collisionResults[0].object.challengeId}`);
+              window.location.reload();
+              return;
+            }
+          }
+    };
 
     // //initialize debugging gui
     // gui_init = () => {
@@ -181,6 +234,7 @@ class ThreeVoyage extends Component<VoyageProps> {
         let agent_mat = new THREE.MeshNormalMaterial();
         this.agent_mesh = new THREE.Mesh(agent_geom, agent_mat);
         this.agent_mesh.position.y = 0.1;
+        this.agent_mesh.name = 'player';
 
         this.goal = new THREE.Object3D();
         this.follow = new THREE.Object3D();
@@ -229,6 +283,7 @@ class ThreeVoyage extends Component<VoyageProps> {
         }
         //render the entire scene
         this.renderer.render( this.scene, this.camera );
+        this.checkCollision();
         // The window.requestAnimationFrame() method tells the browser that you wish to perform
         // an animation and requests that the browser call a specified function
         // to update an animation before the next repaint
