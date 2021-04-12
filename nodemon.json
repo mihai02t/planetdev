@@ -1,0 +1,7 @@
+{
+    "signal": "SIGHUP",
+    "watch": ["backend"],
+    "ext": "ts",
+    "exec": "cd backend && npm run dev"
+}
+  
