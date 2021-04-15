@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { makeStyles , createStyles, Theme } from '@material-ui/core/styles';
 import { TransitionProps } from '@material-ui/core/transitions';
 import { Dialog, Slide, AppBar } from '@material-ui/core';
@@ -12,8 +13,10 @@ import Editor from './components/Editor';
 // import MenuIcon from '@material-ui/icons/Menu';
 
 import { useRequiresAuthentication } from '../../utils/authService';
+import Challenge from '../../utils/types/Challenge';
+import { fetchChallenge } from './services';
 
-export const CODING_PATH = '/coding';
+export const CODING_PATH = '/coding/:id';
 
 const drawerWidth = 380;
 
@@ -43,13 +46,23 @@ const Transition = React.forwardRef(function Transition(
 
 const Coding = () => {
     const classes = rootStyles();
-    const { loggedIn } = useRequiresAuthentication();
+    const { loggedIn, user } = useRequiresAuthentication();
+    const { id } = useParams() as { id: string };
 
     let [dialogOpen, setOpen] = React.useState(true);
+    const [challenge, setChallenge] = React.useState(null as Challenge | null);
 
     const handleClose = () => {
         setOpen(false);
     };
+
+    useEffect(() => {
+        const getData = async () => {
+            setChallenge(await fetchChallenge(id));
+        };
+
+        getData();
+    }, []);
 
     // const [draweropen, setDrawerOpen] = React.useState(false);
 
@@ -61,7 +74,7 @@ const Coding = () => {
     //   setDrawerOpen(false);
     // };
 
-    if(!loggedIn) return null;
+    if(!loggedIn || !user) return null;
 
     return (
         <div>
@@ -82,7 +95,7 @@ const Coding = () => {
                                 <MenuIcon />
                             </IconButton> */}
                             <Typography variant="h6" className={classes.title}>
-                                Journey Start Here
+                                {challenge?.title}
                             </Typography>
                             <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
                                 <CloseIcon />

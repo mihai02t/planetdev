@@ -168,11 +168,12 @@ class ThreeVoyage extends Component<VoyageProps> {
             var collisionResults = ray.intersectObjects(this.challenges) as any;
         
             if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
-              console.log('collisionResults', collisionResults);
+                console.log('collisionResults', collisionResults);
               // change bla
-              this.props.history.push(CODING_PATH + `/${collisionResults[0].object.challengeId}`);
-              window.location.reload();
-              return;
+            //   this.props.history.push(CODING_PATH.split(':')[0] + `${collisionResults[0].object.challengeId}`);
+            //   window.location.reload();
+                window.location.replace(`http://localhost:3000/coding/${collisionResults[0].object.challengeId}`);
+                return;
             }
           }
     };
