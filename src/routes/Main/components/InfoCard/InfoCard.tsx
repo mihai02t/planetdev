@@ -21,9 +21,8 @@ function getSteps() {
 
 const InfoCard = (props: InfoCardProps) => {
     const [activeStep, setActiveStep] = React.useState(props.currentPlanet);
-    
+    const [currentStep, setCurrentStep] = React.useState(props.currentPlanet+1)
     const steps = getSteps();
-    var currentStep = props.currentPlanet + 1;
     var pastStep = currentStep;
 
     // handle planet switching
@@ -31,31 +30,30 @@ const InfoCard = (props: InfoCardProps) => {
     const description = ['desc0', 'desc1', 'desc2']
 
     const InitializeCardTitle = (flag: any) => {
+      
       return title[flag]
     }
 
     const InitializeCardDescription = (flag: any) => {
+      
       return description[flag]
     }
 
-    const handleCardContextChange = (flag: any) => {
-      console.log(currentStep)
-      setCardTitle(title[flag-1])
-      setCardDescription(description[flag-1])
-    }
-
+    
     const [CardTitle, setCardTitle] = React.useState(InitializeCardTitle(props.currentPlanet))
     const [CardDescription, setCardDescription] = React.useState(InitializeCardDescription(props.currentPlanet))
     const handleSwitch = () => {
       
-
       pastStep = currentStep;
-      currentStep = (currentStep) % 3 + 1;
+      setCurrentStep(currentStep%3 + 1)
       
+      console.log(currentStep)
       var data = [pastStep, currentStep]
       PubSub.publish('cameraSwitch', data);
       
-      handleCardContextChange(currentStep);
+      setCardTitle(title[currentStep-1])
+      setCardDescription(description[currentStep-1])
+    
 
       console.log("The current Planet is: " + currentStep)
     }

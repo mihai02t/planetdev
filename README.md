@@ -1,5 +1,5 @@
 # Modified based on the latest commit
-- Implement instructions transitions on InfoCard
+- Fixed instructions transitions on InfoCard
 
 TODO:
 - Add smooth transition for the camera orbit gliding anim
