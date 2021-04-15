@@ -21,19 +21,47 @@ function getSteps() {
 
 const InfoCard = (props: InfoCardProps) => {
     const [activeStep, setActiveStep] = React.useState(props.currentPlanet);
+    
     const steps = getSteps();
     var currentStep = props.currentPlanet + 1;
     var pastStep = currentStep;
-    console.log(currentStep);
+
     // handle planet switching
-    const handleSwitch = () => {
-      pastStep = currentStep;
-      currentStep = (currentStep) % 3 + 1;
-      //console.log(currentStep);
-      var data = [pastStep, currentStep]
-      PubSub.publish('cameraSwitch', data);
+    const title = ['title0', 'title1', 'title2']
+    const description = ['desc0', 'desc1', 'desc2']
+
+    const InitializeCardTitle = (flag: any) => {
+      return title[flag]
     }
 
+    const InitializeCardDescription = (flag: any) => {
+      return description[flag]
+    }
+
+    const handleCardContextChange = (flag: any) => {
+      console.log(currentStep)
+      setCardTitle(title[flag-1])
+      setCardDescription(description[flag-1])
+    }
+
+    const [CardTitle, setCardTitle] = React.useState(InitializeCardTitle(props.currentPlanet))
+    const [CardDescription, setCardDescription] = React.useState(InitializeCardDescription(props.currentPlanet))
+    const handleSwitch = () => {
+      
+
+      pastStep = currentStep;
+      currentStep = (currentStep) % 3 + 1;
+      
+      var data = [pastStep, currentStep]
+      PubSub.publish('cameraSwitch', data);
+      
+      handleCardContextChange(currentStep);
+
+      console.log("The current Planet is: " + currentStep)
+    }
+    
+
+   
     return (
       <Paper className="selectcard" style={{ width: '35%', marginLeft: '50%', marginTop: '20%', zIndex: 1, position: 'fixed' }}>
         <Card >
@@ -42,22 +70,13 @@ const InfoCard = (props: InfoCardProps) => {
             
           </Typography>
           <Typography variant="h5" component="h2" style = {{textAlign: 'left'}}>
-          Python Route: Planet 1
+          {CardTitle}
           </Typography>
           <Typography  color="textSecondary" style = {{textAlign: 'left'}}>
-            this is the brief description of chapter 1
+
           </Typography>
           <Typography variant="body2" component="p" style = {{textAlign: 'left'}}>
-            This is the detailed description of chapter 1: <br/>
-            * what the player will learn?<br/>
-            * what the learning route is like?<br/>
-            * How is the difficulty distribution?<br/>
-            * What is the background story of this chapter?<br/>
-            This is the detailed description of chapter 1: <br/>
-            * what the player will learn?<br/>
-            * what the learning route is like?<br/>
-            * How is the difficulty distribution?<br/>
-            * What is the background story of this chapter?<br/>
+          {CardDescription}
           </Typography>
             <Stepper activeStep={activeStep}>
                 {steps.map((label, index) => {

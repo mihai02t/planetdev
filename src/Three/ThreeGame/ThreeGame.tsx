@@ -44,7 +44,6 @@ class ThreeGame extends Component {
         this.startAnimationLoop();
         window.addEventListener('resize', this.handleWindowResize);
         this.pubsub_token = PubSub.subscribe('cameraSwitch', (msg: any, data: any) => {
-            console.log("now is: " + data[1])
             this.handleOrbit(data)            
         })
 
@@ -60,26 +59,22 @@ class ThreeGame extends Component {
     //handle orbit change
     handleOrbit = (data: any) => {
         //data_0 = past data_1 = present
-        console.log("past is: " + data[0])
-        console.log("now is: " + data[1])
+
         if (data[1] == 2 ) {
             this.flag = 1; 
-            console.log("A")
             this.clock = new THREE.Clock();
         }
         if (data[1] == 3 ) {
             this.flag = 2; 
-            console.log("B")
             this.clock = new THREE.Clock();
         }
-        if (data[1] == 1 && data[0] == 3) {
+        if (data[1] == 1 ) {
             this.flag = 3;
-            console.log("C")
             this.clock = new THREE.Clock();
         }
-        if (data[1] == 1) {
+        if (data[1] == 1 && data[0] == 0) {
             this.flag = 0;
-            console.log("stay")
+            console.log("this!")
             this.clock = new THREE.Clock();
         }
         
@@ -476,15 +471,13 @@ class ThreeGame extends Component {
     handleCameraPos = () => {
         
         if (this.flag == 0){
-            return; //don't move
+            return;
         }
         if (this.flag == 1){
-            console.log("flag = 1!")
             
             this.cameraUpdate(0, 0, 2.0, this.curve_tube_0, this.isReverse); //move from jupiter 2 mars
         }
         if (this.flag == 2){
-            console.log("flag = 2!")
             
             this.cameraUpdate(0.5, 0.5, 0.5, this.curve_tube_1, this.isReverse); //move from mars 2 moon
         }
@@ -517,28 +510,12 @@ class ThreeGame extends Component {
 
     //this is a react part...
     render() {
-        console.log(document.documentElement.clientWidth);
+
         return <p style={style} ref={ref => (this.mount = ref)} />;
     }
 }
 
-//these are also react parts...
-// class Container extends React.Component {
-//     state = {isMounted: true};
 
-//     render() {
-//         const {isMounted = true} = this.state;
-//         return (
-//             <>
-//                 <button onClick={() => this.setState(state => ({isMounted: this.state.isMounted}))}>
-//                     {isMounted ? "Unmount" : "Mount"}
-//                 </button>
-//                 {isMounted && <ThreeGame />}
-//                 {isMounted && <div>Scroll to zoom, drag to rotate</div>}
-//             </>
-//         )
-//     }
-// }
 
 export default ThreeGame;
 
