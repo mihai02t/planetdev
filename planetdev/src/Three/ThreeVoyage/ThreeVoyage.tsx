@@ -133,6 +133,7 @@ class ThreeVoyage extends Component<VoyageProps> {
             this.scene.add(challengeToAdd);
             this.challenges.push(challengeToAdd);
         });
+        this.navigated = false;
         
         this.camera.position.set(0, 0.3, 0);
         this.camera.lookAt(this.scene.position);
@@ -167,12 +168,16 @@ class ThreeVoyage extends Component<VoyageProps> {
             var ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
             var collisionResults = ray.intersectObjects(this.challenges) as any;
         
-            if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
+            if (!this.navigated && collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
+                this.navigated = true;
                 console.log('collisionResults', collisionResults);
-              // change bla
-            //   this.props.history.push(CODING_PATH.split(':')[0] + `${collisionResults[0].object.challengeId}`);
-            //   window.location.reload();
-                window.location.replace(`http://localhost:3000/coding/${collisionResults[0].object.challengeId}`);
+                // change bla
+                // this.props.history.block();
+                this.props.history.push(CODING_PATH.split(':')[0] + `${collisionResults[0].object.challengeId}`);
+                // this.props.history.go(1);
+
+                // window.location.reload();
+                // window.location.replace(`http://localhost:3000/coding/${collisionResults[0].object.challengeId}`);
                 return;
             }
           }

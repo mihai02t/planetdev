@@ -21,6 +21,12 @@ import marsbump1k from '../assets/marsbump1k.jpg'
 
 import jupitermap from '../assets/jupitermap.jpg'
 
+import PubSub from 'pubsub-js'
+import { ColorLensOutlined } from "@material-ui/icons";
+
+export type ThreeGameProps = {
+    currentPlanet: number;
+};
 
 const style = {
     display:'block',
@@ -36,12 +42,40 @@ class ThreeGame extends Component {
         this.addCustomSceneObjects();
         this.startAnimationLoop();
         window.addEventListener('resize', this.handleWindowResize);
+
+        this.pubsub_token = PubSub.subscribe('cameraSwitch', (msg: any, data: any) => {
+            this.handleOrbit(data)            
+        });
     }
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.handleWindowResize);
         window.cancelAnimationFrame(this.requestID);
         // this.controls.dispose();
+
+    }
+
+    //handle orbit change
+    handleOrbit = (data: any) => {
+        //data_0 = past data_1 = present
+        if (data[1] == 2 ) {
+            this.flag = 1; 
+            this.clock = new THREE.Clock();
+        }
+        if (data[1] == 3 ) {
+            this.flag = 2; 
+            this.clock = new THREE.Clock();
+        }
+        if (data[1] == 1 ) {
+            this.flag = 3;
+            this.clock = new THREE.Clock();
+        }
+        if (data[1] == 1 && data[0] == 0) {
+            this.flag = 0;
+            console.log("this!")
+            this.clock = new THREE.Clock();
+        }
+        
     }
 
     // Standard scene setup in Three.js
@@ -70,6 +104,9 @@ class ThreeGame extends Component {
         this.renderer.shadowMap.enabled	= true
         this.renderer.setSize( width, height );
         this.mount.appendChild( this.renderer.domElement ); // mount using React ref
+
+        this.isReverse = false;
+        this.flag = 0;
     };
 
     //a custom helper for generating clouds
@@ -341,7 +378,7 @@ class ThreeGame extends Component {
     }
 
     //handle camera update
-    cameraUpdate = (x: any, y: any, z: any, curve_tube: any, isReverse: any) => {
+    cameraUpdate = (x: any, y: any, z: any, curve_tube: any, isReverse: boolean) => {
         const time = this.clock.getElapsedTime();
         const looptime = 3;
         var t;
@@ -400,9 +437,19 @@ class ThreeGame extends Component {
           false,
         );
 
-        //from mars to jupiter
+        //from mars to moon
         this.curve[1] = new THREE.CatmullRomCurve3( [
             new THREE.Vector3(0.9,0,2.8),   // mars view
+            new THREE.Vector3(0.8, 0.3, 1.5), // middle point
+            new THREE.Vector3(0.5, 0.5, 0.8)
+
+          ],
+          false,
+        );
+        
+        // from jupiter to moon
+        this.curve[2] = new THREE.CatmullRomCurve3( [
+            new THREE.Vector3(0.2,0,5.2),   // jupiter view
             new THREE.Vector3(0.8, 0.3, 1.5), // middle point
             new THREE.Vector3(0.5, 0.5, 0.8)
 
@@ -420,18 +467,30 @@ class ThreeGame extends Component {
         let curve_mat = new THREE.MeshBasicMaterial({color:0xff0000, wireframe:true, side: THREE.DoubleSide});
         this.curve_tube_1 = new THREE.Mesh(curve_geom, curve_mat);
         //this.scene.add(curve_tube)
+
+        let curve_geom_2 = new THREE.TubeBufferGeometry(this.curve[2], 100, 0, 10, false);
+        let curve_mat_2 = new THREE.MeshBasicMaterial({color:0xff0000, wireframe:true, side: THREE.DoubleSide});
+        this.curve_tube_2 = new THREE.Mesh(curve_geom_2, curve_mat_2);
+        //this.scene.add(curve_tube)
 				
     };
 
-    handleCameraPos = (flag: any, isReverse: any) => {
-        if (flag == 0){
+    handleCameraPos = () => {
+        
+        if (this.flag == 0){
             return;
         }
-        else if (flag == 1){
-            this.cameraUpdate(0, 0, 2.0, this.curve_tube_0, isReverse);
+        if (this.flag == 1){
+            
+            this.cameraUpdate(0, 0, 2.0, this.curve_tube_0, false); //move from jupiter 2 mars
         }
-        else if (flag == 2){
-            this.cameraUpdate(0.5, 0.5, 0.5, this.curve_tube_1, isReverse);
+        if (this.flag == 2){
+            
+            this.cameraUpdate(0.5, 0.5, 0.5, this.curve_tube_1, false); //move from mars 2 moon
+        }
+        if (this.flag == 3){
+            
+            this.cameraUpdate(0.5, 0.5, 0.5, this.curve_tube_2, true); //move from mars 2 moon
         }
     };
 
@@ -440,7 +499,7 @@ class ThreeGame extends Component {
        
         //handle the movement of the camera
         //this.handleCameraPos(0, false);    //0: stop at jupiter 1: move from jupiter to mars 2: move from mars to moon; isReverse: true == reverse the orbit false == follow the order
-        this.handleCameraPos(1, true);
+        this.handleCameraPos();
 
         //render the entire scene
         this.renderer.render( this.scene, this.camera );
@@ -459,7 +518,6 @@ class ThreeGame extends Component {
 
     //this is a react part...
     render() {
-        console.log(document.documentElement.clientWidth);
         return <p style={style} ref={ref => (this.mount = ref)} />;
     }
 }

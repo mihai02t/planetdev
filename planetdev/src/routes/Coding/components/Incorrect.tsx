@@ -1,4 +1,4 @@
-import { Dialog, DialogContent } from '@material-ui/core';
+import { Dialog, DialogActions, DialogContent, DialogContentText, Button, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import ClearIcon from '@material-ui/icons/Clear';
 // import CheckIcon from '@material-ui/icons/Check';
@@ -15,6 +15,7 @@ const useStyles = makeStyles({
 
 export interface IncorrectProps {
     c_open: boolean;
+    message: string;
     c_setOpen: (value: boolean) => void;
 }
 
@@ -24,10 +25,19 @@ const Incorrect = (props: IncorrectProps) => {
 
     return (
         <Dialog open={c_open} onClose={() => {c_setOpen(false)}}>
-            <DialogContent  style={{width: 80}} className={classes.dialog}>
-                <ClearIcon className = {classes.icons}/>
-                <div>Ops, there could be something wrong !</div>
+            <DialogContent className={classes.dialog}>
+                <DialogContentText>
+                    <Box display="flex">
+                        <ClearIcon className={classes.icons}/>
+                    </Box>
+                    <div style={{whiteSpace: 'pre-wrap'}}>{props.message}</div>
+                </DialogContentText>
             </DialogContent>
+            <DialogActions>
+                <Button onClick={() => {c_setOpen(false)}} color="primary">
+                    Close
+                </Button>
+            </DialogActions>
         </Dialog>
         // <CheckIcon className = {classes.icons2}/>
         // <div >Correct !</div>

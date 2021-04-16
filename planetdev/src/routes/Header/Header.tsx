@@ -13,15 +13,22 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 
 import { useLogOut } from '../../utils/authService';
+import { Link } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
+import { MAIN_PATH } from '../Main';
 
 const useStyles = makeStyles({
     root: {
       flexGrow: 1,
+    },
+    title: {
+        color: '#ffffff'
     }
 });  
 
 const Header: React.FC<React.ReactNode> = ({ children }) => {
     const logout = useLogOut();
+    const history = useHistory();
     const classes = useStyles();
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -41,7 +48,15 @@ const Header: React.FC<React.ReactNode> = ({ children }) => {
                 <Box display="flex">
                     <Box>  
                         <Toolbar>
-                            <Typography variant="h6">PlanetDev</Typography>
+                            {/* <Typography variant="h6">PlanetDev</Typography> */}
+                            <Link
+                                component="button"
+                                className={classes.title}
+                                variant="h6"
+                                onClick={() => { history.push(MAIN_PATH) }}
+                            >
+                                <Typography variant="h6">PlanetDev</Typography>
+                            </Link>
                         </Toolbar>
                     </Box>
                     <Box flexGrow={1} />

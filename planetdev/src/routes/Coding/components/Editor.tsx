@@ -3,9 +3,18 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import {Grid, Paper, Button, Typography, Dialog} from '@material-ui/core';
 import AceEditor from 'react-ace';
 import "ace-builds/src-noconflict/mode-python";
+import "ace-builds/src-noconflict/snippets/python";
 import "ace-builds/src-noconflict/theme-twilight";
+import "ace-builds/src-noconflict/ext-language_tools";
 import Solution from './Solution'
 import Incorrect from './Incorrect'
+import ChallengeInUser from '../../../utils/types/ChallengeInUser';
+import { evaluateCode } from '../services';
+import { toast } from 'react-toastify';
+
+export interface EditorProps {
+    userChallenge: ChallengeInUser;
+};
 
 const contentStyles = makeStyles((theme: Theme) => createStyles({
     toolbar: theme.mixins.toolbar,
@@ -25,15 +34,35 @@ const contentStyles = makeStyles((theme: Theme) => createStyles({
     }
 }));
 
-function onChange(newValue: any) {
-    console.log("change", newValue);
-}
-
-const Editor = () => {
+const Editor = (props: EditorProps) => {
     const classes = contentStyles();
     const fontSize = 18;
     const [open, setOpen] = React.useState(false);
     const [c_open, c_setOpen] = React.useState(false);
+    const [c_message, c_setMessage] = React.useState("");
+    const [code, setCode] = React.useState(props.userChallenge.code);
+
+    const [submitDisable, setSubmitDisable] = React.useState(props.userChallenge.completed);
+    const [editorDisable, setEditorDisable] = React.useState(false);
+
+    const onChange = (newValue: string) => {
+        setCode(newValue);
+    };
+
+    const submitCode = async () => {
+        setSubmitDisable(true);
+        setEditorDisable(true);
+
+        const res = await evaluateCode(props.userChallenge.challengeId.toString(), code);
+        setEditorDisable(false);
+        if(res.error) {
+            setSubmitDisable(false);
+            c_setMessage(res.message);
+            return c_setOpen(true);
+        }
+
+        toast(res.message);
+    };
 
     return (
         <main className={classes.content}>
@@ -45,10 +74,11 @@ const Editor = () => {
                     name="app_code_editor"
                     onChange={onChange}
                     fontSize={fontSize}
+                    defaultValue={code}
+                    readOnly={editorDisable}
                     showPrintMargin
                     showGutter
-                    highlightActiveLine 
-                    enableSnippets
+                    highlightActiveLine
                     style={{width: '100%', height: '88vh'}} //, minHeight: 620
                     // commands={[{  
                     //        name: 'saveFile', 
@@ -60,13 +90,14 @@ const Editor = () => {
                         enableLiveAutocompletion: true,
                         enableSnippets: false,
                         showLineNumbers: true,
-                        tabSize: 6
+                        tabSize: 4
                     }}
                 />
                 <Grid item container justify='space-between' style={{minHeight: 30}}>
                     <Grid item>
                         <Button
                             variant="contained"
+                            disabled
                             onClick={() => {setOpen(true)}}
                             className={classes.button}>
                                 Solution
@@ -80,7 +111,9 @@ const Editor = () => {
                     <Grid item>
                         <Button
                             variant="contained"
-                            className={classes.button}>
+                            className={classes.button}
+                            onClick={() => {submitCode()}}
+                            disabled={submitDisable}>
                             {/* onClick={() => {c_setOpen(true)}} --- if file Incorrect is used*/}
                                 Submit
                         </Button>
@@ -89,7 +122,7 @@ const Editor = () => {
             </Paper>
             <Solution open={open} setOpen={setOpen}></Solution>
             {/* If answer is corrent, go to next one, else show this dialog*/}
-            <Incorrect c_open={c_open} c_setOpen={c_setOpen}></Incorrect>
+            <Incorrect message={c_message} c_open={c_open} c_setOpen={c_setOpen}></Incorrect>
         </main>
     );
 };

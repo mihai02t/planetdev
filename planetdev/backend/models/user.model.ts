@@ -11,6 +11,7 @@ export interface User extends Document {
     name: string;
     points: number;
     planetsUnlocked: number;
+    tutorial: boolean;
     challenges: ChallengeInUser[];
 }
 
@@ -35,6 +36,10 @@ const userSchema = new mongoose.Schema({
     },
     planetsUnlocked: {
         type: Number,
+        default: 1
+    },
+    tutorial: {
+        type: Boolean,
         default: 1
     },
     challenges: {

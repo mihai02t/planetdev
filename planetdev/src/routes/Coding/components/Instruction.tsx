@@ -7,6 +7,11 @@ import MenuIcon from '@material-ui/icons/Menu';
 // import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChallengeContent from './ChallengeContent'
 import InstructionContent from './InstructionContent'
+import Challenge from '../../../utils/types/Challenge';
+
+export interface InstructionProps {
+    challenge: Challenge
+};
 
 const drawerWidth = 380;
 
@@ -34,7 +39,7 @@ const drawerStyles = makeStyles((theme: Theme) => createStyles({
     }
 }));
 
-const Instruction = () => {
+const Instruction = (props: InstructionProps) => {
     const classes = drawerStyles();
   
     return (
@@ -63,7 +68,7 @@ const Instruction = () => {
                         Challenge
                     </Typography>
                     <Divider />
-                    <ChallengeContent />
+                    <ChallengeContent content={props.challenge.statement} />
                     <br />
                 </Grid>
                 <Grid item>
@@ -72,7 +77,7 @@ const Instruction = () => {
                         Instruction
                     </Typography>
                     <Divider />
-                    <InstructionContent />
+                    <InstructionContent content={props.challenge.instruction} />
                 </Grid>
             </Grid> 
         </Drawer>

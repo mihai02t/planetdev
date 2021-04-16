@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { makeStyles , createStyles, Theme } from '@material-ui/core/styles';
 import { TransitionProps } from '@material-ui/core/transitions';
-import { Dialog, Slide, AppBar } from '@material-ui/core';
-import { Typography, Toolbar, IconButton } from '@material-ui/core'
-import CloseIcon from '@material-ui/icons/Close';
+import { Dialog, Slide, AppBar, Button } from '@material-ui/core';
+import { Typography, Toolbar } from '@material-ui/core'
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import Instruction from './components/Instruction';
 import Editor from './components/Editor';
@@ -31,7 +31,12 @@ const rootStyles = makeStyles((theme: Theme) => createStyles({
     },
     title: {
             flex: 1,
-        },
+    },
+    button: {
+        margin: theme.spacing(1),
+        backgroundColor: '#2c57cc',
+        color: "white"
+    }
     // dialog: {
     //   padding: theme.spacing(1)
     // }
@@ -46,6 +51,7 @@ const Transition = React.forwardRef(function Transition(
 
 const Coding = () => {
     const classes = rootStyles();
+    const history = useHistory();
     const { loggedIn, user } = useRequiresAuthentication();
     const { id } = useParams() as { id: string };
 
@@ -54,6 +60,7 @@ const Coding = () => {
 
     const handleClose = () => {
         setOpen(false);
+        history.go(-1);
     };
 
     useEffect(() => {
@@ -76,6 +83,8 @@ const Coding = () => {
 
     if(!loggedIn || !user) return null;
 
+    const userChallenge = user.challenges.find(e => e.challengeId.toString() === id);
+
     return (
         <div>
             <Dialog
@@ -97,13 +106,18 @@ const Coding = () => {
                             <Typography variant="h6" className={classes.title}>
                                 {challenge?.title}
                             </Typography>
-                            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
-                                <CloseIcon />
-                            </IconButton>
+                            <Button
+                                variant="contained"
+                                className={classes.button}
+                                onClick={handleClose}
+                                startIcon={<ArrowBackIcon />}
+                            >
+                                Back to planet
+                            </Button>
                         </Toolbar>
                     </AppBar>
-                    <Instruction />
-                    <Editor />
+                    {challenge && <Instruction challenge={challenge}/>}
+                    {userChallenge && <Editor userChallenge={userChallenge}/>}
                 </div>
             </Dialog>
         </div>

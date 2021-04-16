@@ -27,5 +27,10 @@ yarn-error.log*
 /backend/node_modules
 /backend/dist
 
+# assessor
+/assessor/node_modules
+/assessor/dist
+/assessor/script.py
+
 # env (except the MongoDB one)
 /backend/auth/.env
